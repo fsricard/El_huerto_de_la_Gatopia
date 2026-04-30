@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="RUTA/AL/LOGO.png" alt="Logo del Huerto de la Gatopía" width="200">
+  <img src="/img/logo_0001.png" alt="Logo del Huerto de la Gatopía" width="200">
 </p>
 
 # 🌻 El Huerto de la Gatopía  
@@ -109,7 +109,7 @@ _(Los archivos sensibles .env, database.php y envLoader.php no se incluyen en el
 - **Ricard FS**, creador de:
 
 1. **El Arca de Noemí** (*En desarrollo*) - [GitHub](https://github.com/fsricard/El_Arca_de_Noemi)
-2. **El Huerto de la Gatopía** (*En desarrollo*) - [github]()
+2. **El Huerto de la Gatopía** (*En desarrollo*) - [github](https://github.com/fsricard/El_huerto_de_la_Gatopia)
 3. **El Diablillo Sarcástico** (*En desarrollo*) - [GitHub](https://github.com/fsricard/Ricard_FS_WEB)
 4. **La Gatopía de Miriam** (*En producción*)  - [La Gatopía de Miriam](https://lagatopiademiriam.com/)
 

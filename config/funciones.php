@@ -28,3 +28,15 @@ function base_url(): string
     // Asegurar que NO termina con "/"
     return rtrim($protocolo . $host . $subcarpeta, '/');
 }
+
+// Genera rutas absolutas correctas para assets.
+function asset(string $ruta): string
+{
+    // Asegura que base_url() NO termina con "/"
+    $base = rtrim(base_url(), '/');
+
+    // Asegura que la ruta SÍ empieza con "/"
+    $ruta = '/' . ltrim($ruta, '/');
+
+    return $base . $ruta;
+}

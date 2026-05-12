@@ -113,3 +113,22 @@ function esMovilOtablet()
     return esSoloMovil() || esSoloTablet();
 }
 
+// Función para limitar el número de palabras en un texto a 20 palabras
+function limitar_palabras($texto, $max_palabras = 20)
+{
+    // Eliminar etiquetas HTML para evitar cortes feos
+    $texto_limpio = trim(strip_tags($texto));
+
+    // Convertir múltiples espacios en uno solo
+    $texto_limpio = preg_replace('/\s+/', ' ', $texto_limpio);
+
+    $palabras = explode(' ', $texto_limpio);
+
+    if (count($palabras) <= $max_palabras) {
+        return $texto_limpio;
+    }
+
+    $corte = array_slice($palabras, 0, $max_palabras);
+    return implode(' ', $corte) . '...';
+}
+

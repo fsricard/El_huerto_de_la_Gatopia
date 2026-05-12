@@ -107,3 +107,9 @@ function esSoloTablet()
     return false;
 }
 
+// Función combinada para detectar dispositivos móviles y tablets
+function esMovilOtablet()
+{
+    return esSoloMovil() || esSoloTablet();
+}
+

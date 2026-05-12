@@ -161,3 +161,11 @@ function mostrarTextoPersonalizado()
     echo $textos[$pagina] ?? 'El Huerto de la Gatopía';
 }
 
+// Función para mostrar el CopyRight en el footer
+function CopyrightRicardFS($startYear = 2024)
+{
+    $currentYear = date('Y');
+    $yearDisplay = ($startYear == $currentYear) ? $currentYear : "$startYear – $currentYear";
+    return "&copy; $yearDisplay El Huerto de la Gatopía - Todos los derechos reservados";
+}
+

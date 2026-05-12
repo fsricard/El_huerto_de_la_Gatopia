@@ -80,3 +80,30 @@ function esSoloMovil()
     return false;
 }
 
+// Función para detectar tablets
+function esSoloTablet()
+{
+    $ua = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
+
+    // Detectores de tablet
+    $tablets = [
+        'ipad',
+        'tablet',
+        'kindle',
+        'silk'
+    ];
+
+    foreach ($tablets as $t) {
+        if (strpos($ua, $t) !== false) {
+            return true;
+        }
+    }
+
+    // Caso especial: Android tablet (Android sin "mobile")
+    if (strpos($ua, 'android') !== false && strpos($ua, 'mobile') === false) {
+        return true;
+    }
+
+    return false;
+}
+

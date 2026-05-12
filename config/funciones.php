@@ -49,3 +49,34 @@ function tienePermiso(): bool
     return in_array($_SESSION['rol'], $rolesPermitidos, true);
 }
 
+// Función para detectar dispositos móviles
+function esSoloMovil()
+{
+    $ua = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
+
+    // Detectores de móvil
+    $moviles = [
+        'iphone',
+        'ipod',
+        'android',
+        'blackberry',
+        'windows phone',
+        'opera mini',
+        'mobile',
+        'webos'
+    ];
+
+    // Si es tablet, no es móvil
+    if (esSoloTablet()) {
+        return false;
+    }
+
+    foreach ($moviles as $m) {
+        if (strpos($ua, $m) !== false) {
+            return true;
+        }
+    }
+
+    return false;
+}
+

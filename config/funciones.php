@@ -169,3 +169,41 @@ function CopyrightRicardFS($startYear = 2024)
     return "&copy; $yearDisplay El Huerto de la Gatopía - Todos los derechos reservados";
 }
 
+// Función para crear un sistema de paginación modular
+function paginador($total_registros, $por_pagina, $pagina_actual, $filtros = [], $param_pagina = 'p')
+{
+
+    $total_paginas = max(1, ceil($total_registros / $por_pagina));
+
+    // No queremos arrastrar el parámetro de página en los filtros
+    unset($filtros[$param_pagina]);
+
+    // Construir query string con el resto de filtros
+    $query = '';
+    if (!empty($filtros)) {
+        $query = '&' . http_build_query($filtros);
+    }
+
+    $html = '<div class="paginacion">';
+
+    // Anterior
+    if ($pagina_actual > 1) {
+        $html .= '<a class="btn-pag" href="?' . $param_pagina . '=' . ($pagina_actual - 1) . $query . '">Anterior</a>';
+    }
+
+    // Números
+    for ($i = 1; $i <= $total_paginas; $i++) {
+        $activo = ($i == $pagina_actual) ? 'activo' : '';
+        $html .= '<a class="btn-pag ' . $activo . '" href="?' . $param_pagina . '=' . $i . $query . '">' . $i . '</a>';
+    }
+
+    // Siguiente
+    if ($pagina_actual < $total_paginas) {
+        $html .= '<a class="btn-pag" href="?' . $param_pagina . '=' . ($pagina_actual + 1) . $query . '">Siguiente</a>';
+    }
+
+    $html .= '</div>';
+
+    return $html;
+}
+

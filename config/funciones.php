@@ -144,3 +144,20 @@ function tituloPagina($pagina)
     return $titulos[$pagina] ?? 'Administración';
 }
 
+// Función para imprimir textos personalizados en "header.php" del FrontEnd
+function mostrarTextoPersonalizado()
+{
+    // Recupera la ruta desde la variable global
+    $pagina = $GLOBALS['pagina_actual'] ?? '';
+
+    // Define los textos personalizados
+    $textos = [
+        ''                          => 'El Arca de Noemi',
+        '404'                       => '!!Vaya por Dios¡¡, que situación más vergonzosa',
+        'inicio'                    => 'El Huerto de la Gatopía'
+    ];
+
+    // Imprime el texto correspondiente o uno por defecto
+    echo $textos[$pagina] ?? 'El Huerto de la Gatopía';
+}
+

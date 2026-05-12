@@ -40,3 +40,12 @@ function asset(string $ruta): string
 
     return $base . $ruta;
 }
+
+// Función para restringir contenido solo para el rol "admin"
+function tienePermiso(): bool
+{
+    $rolesPermitidos = ['admin'];
+
+    return in_array($_SESSION['rol'], $rolesPermitidos, true);
+}
+

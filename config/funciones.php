@@ -132,3 +132,15 @@ function limitar_palabras($texto, $max_palabras = 20)
     return implode(' ', $corte) . '...';
 }
 
+// Función para imprimir los textos dinámicos en el header del BackEnd
+function tituloPagina($pagina)
+{
+    // Array asociativo de títulos
+    $titulos = [
+        'logs'      => 'Registro de logs'
+    ];
+
+    // Si existe en el array, devolvemos el título; si no, uno genérico
+    return $titulos[$pagina] ?? 'Administración';
+}
+

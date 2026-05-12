@@ -1,24 +1,60 @@
 ﻿<?php
-// admin/login.php
-session_start();
-require_once '../config/database.php';
+require_once __DIR__ . '/includes/session.php';
+require_once __DIR__ . '/includes/auth.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario = $_POST['usuario'];
-    $clave = $_POST['clave'];
+if (isLoggedIn()) {
+    header("Location: dashboard.php");
+    exit;
+}
 
-    // Buscar el usuario en la base de datos
-    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE nombre = ?");
-    $stmt->execute([$usuario]);
-    $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+// Generar token CSRF
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+}
 
-    if ($datos && password_verify($clave, $datos['clave'])) {
-        $_SESSION['usuario'] = $datos['nombre'];
-        $_SESSION['rol'] = $datos['rol'];
-        header("Location: admin.php");
-        exit();
+$error = '';
+$expiredMsg = isset($_GET['expired']) ? 'Tu sesión ha expirado por inactividad. Vuelve a iniciar sesión.' : '';
+
+// Inicializar contador de intentos
+if (!isset($_SESSION['login_attempts'])) {
+    $_SESSION['login_attempts'] = 0;
+}
+if (!isset($_SESSION['lock_until'])) {
+    $_SESSION['lock_until'] = 0;
+}
+
+// Si está bloqueado por demasiados intentos
+if (time() < $_SESSION['lock_until']) {
+    $error = 'Demasiados intentos fallidos. Espera unos minutos antes de volver a intentarlo.';
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
+    $usuario = trim($_POST['usuario'] ?? '');
+    $clave  = $_POST['clave'] ?? '';
+    $csrf   = $_POST['csrf_token'] ?? '';
+
+    if (!hash_equals($_SESSION['csrf_token'], $csrf)) {
+        $error = 'Solicitud no válida. Inténtalo de nuevo.';
+    } elseif ($usuario === '' || $clave === '') {
+        $error = 'Por favor, introduce tu usuario y contraseña.';
     } else {
-        $error = "Credenciales incorrectas";
+        if (login($usuario, $clave)) {
+            secureSessionRegenerate();
+            $_SESSION['login_attempts'] = 0; // reset al éxito
+            logSessionEvent("Login correcto", $_SESSION['usuario_usuario']);
+            header("Location: dashboard.php");
+            exit;
+        } else {
+            $_SESSION['login_attempts']++;
+            logSessionEvent("Login fallido", $usuario);
+            if ($_SESSION['login_attempts'] >= 5) {
+                // Bloqueo de 5 minutos tras 5 intentos fallidos
+                $_SESSION['lock_until'] = time() + 300;
+                $error = 'Has superado el número máximo de intentos. Espera 5 minutos.';
+            } else {
+                $error = 'Usuario o contraseña incorrectos. Intento ' . $_SESSION['login_attempts'] . ' de 5.';
+            }
+        }
     }
 }
 ?>
@@ -26,31 +62,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Panel de Administración</title>
-
-    <!-- Fuentes de Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Agdasima&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="includes/backend.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Acceso al panel</title>
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-    <div class="login-container">
-        <h2>Acceso al panel</h2>
+    <main class="login-container">
+        <form method="post" class="login-form" autocomplete="off" novalidate>
+            <h1>Acceso al panel</h1>
 
-        <?php if (isset($error)): ?>
-            <div class="error"><?= htmlspecialchars($error) ?></div>
-        <?php endif; ?>
+            <?php if ($expiredMsg): ?>
+                <p class="alert alert-warning"><?= htmlspecialchars($expiredMsg) ?></p>
+            <?php endif; ?>
 
-        <form method="post">
-            <input type="text" name="usuario" placeholder="Usuario" required />
-            <input type="password" name="clave" placeholder="Contraseña" required />
+            <?php if ($error): ?>
+                <p class="alert alert-error"><?= htmlspecialchars($error) ?></p>
+            <?php endif; ?>
+
+            <label for="usuario">Usuario</label>
+            <input type="text" id="usuario" name="usuario" required autofocus>
+
+            <label for="clave">Contraseña</label>
+            <input type="password" id="clave" name="clave" required>
+
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+
             <button type="submit">Entrar</button>
         </form>
-    </div>
+    </main>
 </body>
 </html>

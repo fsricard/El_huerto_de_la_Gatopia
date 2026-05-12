@@ -627,69 +627,6 @@ textarea {
 
 /* END módulo mensajes de usuario */
 
-/* Pantalla de Login */
-.login-container {
-  max-width: 500px;
-  margin: 80px auto;
-  padding: 40px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.login-container h2 {
-  font-size: 2.8rem;
-  font-weight: bold;
-  letter-spacing: 1.5px;
-  margin-bottom: 30px;
-  text-align: center;
-  color: #ff6f61;
-  font-family: 'Rajdhani', sans-serif;
-}
-
-.login-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.login-container input {
-  padding: 12px;
-  font-size: 1.6rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-.login-container button {
-  background-color: #ff6f61;
-  color: #fff;
-  padding: 12px;
-  font-size: 1.8rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 400ms linear;
-}
-
-.login-container button:hover {
-  background-color: #e65c4f;
-}
-
-.login-container .error {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 12px;
-  border-radius: 5px;
-  font-size: 1.6rem;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* END pantalla de Login */
-
 /* Módulo gestión del header frontend */
 .preview-header {
   max-width: 300px;
